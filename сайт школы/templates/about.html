@@ -1,0 +1,148 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="О проекте ЭКО-ШКОЛА №59 — миссия, цели, история.">
+    <title>О проекте | ЭКО-ШКОЛА №59</title>
+    <link rel="stylesheet" href="{% static 'assets/css/main.css' %}">
+</head>
+<body>
+    <div id="page-loader"><div class="loader-leaf"></div></div>
+    <div class="toast-container" id="toast-container"></div>
+    <button id="back-to-top" title="Наверх">↑</button>
+
+    <nav class="navbar" id="navbar">
+        <a href="{% url 'home' %}" class="nav-logo"><span class="logo-icon">🌿</span><span>ЭКО-ШКОЛА №59</span></a>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="{% url 'about' %}" class="active">О проекте</a></li>
+            <li><a href="{% url 'eco_patrol' %}">Эко-Патруль</a></li>
+            <li><a href="{% url 'tree_map' %}">Карта деревьев</a></li>
+            <li><a href="{% url 'monitoring' %}">Мониторинг</a></li>
+            <li><a href="{% url 'news' %}">Новости</a></li>
+            <li><a href="{% url 'gallery' %}">Галерея</a></li>
+            <li><a href="{% url 'participants' %}">Участники</a></li>
+            <li><a href="{% url 'documents' %}">Документы</a></li>
+            <li><a href="{% url 'achievements' %}">Достижения</a></li>
+            <li><a href="{% url 'contacts' %}">Контакты</a></li>
+        </ul>
+        <div class="nav-actions">
+            <button class="theme-toggle" id="theme-toggle">🌓</button>
+            <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <main class="section" style="padding-top:calc(var(--navbar-height) + 2rem);">
+        <div class="section-header reveal">
+            <span class="section-tag">О проекте</span>
+            <h2>История, миссия и цели</h2>
+            <div class="section-line"></div>
+        </div>
+        <div class="about-grid reveal">
+            <div class="about-text">
+                <h3>🌱 История проекта</h3>
+                <p>Экологический проект «ЭКО-ШКОЛА» стартовал в 2019 году на базе школы №59 имени Оморбека Датка в городе Ош. Инициативная группа учителей и учеников решила превратить школьную территорию в зеленый оазис и создать культуру бережного отношения к природе.</p>
+                <h3>🏔️ Экологическая проблема города Ош</h3>
+                <p>Ош сталкивается с проблемами загрязнения воздуха, сокращения зеленых насаждений и недостаточной экологической грамотности населения. Наш проект напрямую отвечает на эти вызовы.</p>
+                <h3>🎯 Цели проекта</h3>
+                <p>Озеленение территории школы и города, экологическое просвещение, формирование устойчивых экологических привычек у молодежи, создание модели «зеленой школы» для всего Кыргызстана.</p>
+            </div>
+            <div class="about-text">
+                <h3>💡 Миссия</h3>
+                <p>Воспитать поколение экологически ответственных граждан, которые будут беречь природу Кыргызстана и вносить вклад в устойчивое развитие региона.</p>
+                <h3>📋 Долгосрочный план (5–10 лет)</h3>
+                <p>К 2030 году мы планируем высадить более 5000 деревьев, создать экологический образовательный центр, распространить модель «ЭКО-ШКОЛЫ» на 20 школ области и запустить программу углеродного мониторинга.</p>
+                <div class="about-stats">
+                    <div class="about-stat-card"><div class="big-num">2019</div><small>Год основания</small></div>
+                    <div class="about-stat-card"><div class="big-num">5000+</div><small>Цель деревьев</small></div>
+                    <div class="about-stat-card"><div class="big-num">20</div><small>Школ-партнеров</small></div>
+                    <div class="about-stat-card"><div class="big-num">10 000+</div><small>Охват жителей</small></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="social-links">
+            </a><a href="#" title="Instagram">📷</a><a href="#" title="Telegram">📨</a><a href="#" title="YouTube">▶️</a>
+        </div>
+        <p>© 2024–2026 ЭКО-ШКОЛА №59 имени Оморбека Датка, г. Ош, Кыргызстан.</p>
+        <p style="font-size:0.8rem;">Создаем зеленое будущее вместе 🌍</p>
+    </footer>
+
+    <script>
+        (function() {
+            const loader=document.getElementById('page-loader');
+            window.addEventListener('load',()=>{setTimeout(()=>loader.classList.add('hidden'),400);});
+            setTimeout(()=>loader.classList.add('hidden'),3000);
+
+            const themeToggle=document.getElementById('theme-toggle');
+            const html=document.documentElement;
+            const saved=localStorage.getItem('eco-school-theme')||'light';
+            html.setAttribute('data-theme',saved);
+            themeToggle.textContent=saved==='dark'?'☀️':'🌓';
+            themeToggle.addEventListener('click',()=>{
+                const cur=html.getAttribute('data-theme');
+                const next=cur==='dark'?'light':'dark';
+                html.setAttribute('data-theme',next);
+                localStorage.setItem('eco-school-theme',next);
+                themeToggle.textContent=next==='dark'?'☀️':'🌓';
+                showToast(next==='dark'?'🌙 Темная тема включена':'☀️ Светлая тема включена');
+            });
+
+            window.showToast=function(m){
+                const c=document.getElementById('toast-container');
+                const t=document.createElement('div');t.className='toast';t.textContent=m;
+                c.appendChild(t);setTimeout(()=>t.remove(),3000);
+            };
+
+            const navbar=document.getElementById('navbar');
+            const backBtn=document.getElementById('back-to-top');
+            window.addEventListener('scroll',()=>{
+                navbar.classList.toggle('scrolled',window.scrollY>50);
+                backBtn.classList.toggle('visible',window.scrollY>600);
+            });
+            backBtn.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+
+            const hamburger=document.getElementById('hamburger');
+            const navLinks=document.getElementById('nav-links');
+            hamburger.addEventListener('click',()=>{
+                hamburger.classList.toggle('active');
+                navLinks.classList.toggle('active');
+            });
+            navLinks.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('active');
+            }));
+
+            const revealEls=document.querySelectorAll('.reveal');
+            const revealObs=new IntersectionObserver((entries)=>{
+                entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');revealObs.unobserve(e.target);}});
+            },{threshold:0.15,rootMargin:'0px 0px -40px 0px'});
+            revealEls.forEach(el=>revealObs.observe(el));
+            setTimeout(()=>{revealEls.forEach(el=>{const r=el.getBoundingClientRect();if(r.top<window.innerHeight-60){el.classList.add('visible');revealObs.unobserve(el);}});},500);
+
+            const counterEls=document.querySelectorAll('[data-count]');
+            const counterObs=new IntersectionObserver((entries)=>{
+                entries.forEach(e=>{
+                    if(e.isIntersecting){
+                        const el=e.target,target=parseInt(el.getAttribute('data-count')),dur=2000,start=performance.now();
+                        const anim=now=>{
+                            const p=Math.min((now-start)/dur,1),eased=1-Math.pow(1-p,3);
+                            el.textContent=Math.round(target*eased).toLocaleString('ru-RU');
+                            if(p<1)requestAnimationFrame(anim);else el.textContent=target.toLocaleString('ru-RU');
+                        };
+                        requestAnimationFrame(anim);
+                        counterObs.unobserve(el);
+                    }
+                });
+            },{threshold:0.5});
+            counterEls.forEach(el=>counterObs.observe(el));
+
+            // No hero parallax on this page
+        })();
+    </script>
+    <script src="{% static 'assets/js/main.js' %}"></script>
+</body>
+</html>

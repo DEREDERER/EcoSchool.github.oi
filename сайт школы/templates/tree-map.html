@@ -1,0 +1,102 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Карта деревьев | ЭКО-ШКОЛА №59</title>
+    <link rel="stylesheet" href="{% static 'assets/css/main.css' %}">
+</head>
+<body>
+    <div id="page-loader"><div class="loader-leaf"></div></div>
+    <div class="toast-container" id="toast-container"></div>
+    <button id="back-to-top">↑</button>
+
+    <nav class="navbar" id="navbar">
+        <a href="{% url 'home' %}" class="nav-logo"><span class="logo-icon">🌿</span><span>ЭКО-ШКОЛА №59</span></a>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="{% url 'about' %}">О проекте</a></li>
+            <li><a href="{% url 'eco_patrol' %}">Эко-Патруль</a></li>
+            <li><a href="{% url 'tree_map' %}" class="active">Карта деревьев</a></li>
+            <li><a href="{% url 'monitoring' %}">Мониторинг</a></li>
+            <li><a href="{% url 'news' %}">Новости</a></li>
+            <li><a href="{% url 'gallery' %}">Галерея</a></li>
+            <li><a href="{% url 'participants' %}">Участники</a></li>
+            <li><a href="{% url 'documents' %}">Документы</a></li>
+            <li><a href="{% url 'achievements' %}">Достижения</a></li>
+            <li><a href="{% url 'contacts' %}">Контакты</a></li>
+        </ul>
+        <div class="nav-actions">
+            <button class="theme-toggle" id="theme-toggle">🌓</button>
+            <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <main class="section" style="padding-top:calc(var(--navbar-height) + 2rem);">
+        <div class="section-header reveal">
+            <span class="section-tag">Карта деревьев</span>
+            <h2>Интерактивная карта территории</h2>
+            <div class="section-line"></div>
+        </div>
+        <div class="tree-map-container reveal">
+            <div class="tree-map-filters">
+                <button class="active" data-filter="all">🌳 Все деревья</button>
+                <button data-filter="healthy">✅ Здоровые</button>
+                <button data-filter="good">👍 Хорошие</button>
+                <button data-filter="needs-care">⚠️ Требуют ухода</button>
+                <button data-filter="young">🌱 Молодые саженцы</button>
+            </div>
+            <div class="tree-grid" id="tree-grid"></div>
+            <div class="tree-stats-row">
+                <div class="tree-stat-item"><span class="stat-val" id="stat-total">0</span><br>Всего деревьев</div>
+                <div class="tree-stat-item"><span class="stat-val" id="stat-healthy">0</span><br>Здоровых</div>
+                <div class="tree-stat-item"><span class="stat-val" id="stat-young">0</span><br>Молодых</div>
+                <div class="tree-stat-item"><span class="stat-val" id="stat-care">0</span><br>Требуют ухода</div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer"> ... </footer>
+    <script>
+        (function() {
+            // ... (shared core JS identical to index.html) ...
+            // Tree-map specific code (guarded)
+            const treeGrid = document.getElementById('tree-grid');
+            if (treeGrid) {
+                const treeData = [];
+                const species = ['Дуб','Сосна','Береза','Тополь','Ясень','Клен','Ива','Абрикос','Яблоня','Вишня'];
+                const conditions = ['healthy','healthy','healthy','good','good','good','needs-care','young','young','young'];
+                const conditionLabels = { healthy:'Здоровое', good:'Хорошее', 'needs-care':'Требует ухода', young:'Молодой саженец' };
+                for(let i=1; i<=60; i++) {
+                    treeData.push({ id:i, species:species[Math.floor(Math.random()*species.length)], condition:conditions[Math.floor(Math.random()*conditions.length)], date:`202${Math.floor(Math.random()*5)+1}-${String(Math.floor(Math.random()*12)+1).padStart(2,'0')}-${String(Math.floor(Math.random()*28)+1).padStart(2,'0')}` });
+                }
+                let activeFilter = 'all';
+                function renderTrees(filter){
+                    treeGrid.innerHTML='';
+                    const filtered = filter==='all' ? treeData : treeData.filter(t=>t.condition===filter);
+                    filtered.forEach(tree=>{
+                        const dot=document.createElement('div');
+                        dot.className=`tree-dot ${tree.condition}`;
+                        dot.innerHTML=`🌳<span class="tree-tooltip">№${tree.id} • ${tree.species}<br>${tree.date} • ${conditionLabels[tree.condition]}</span>`;
+                        dot.addEventListener('click',()=>showToast(`🌳 Дерево №${tree.id}: ${tree.species} — ${conditionLabels[tree.condition]}`));
+                        treeGrid.appendChild(dot);
+                    });
+                    document.getElementById('stat-total').textContent = treeData.length;
+                    document.getElementById('stat-healthy').textContent = treeData.filter(t=>t.condition==='healthy').length;
+                    document.getElementById('stat-young').textContent = treeData.filter(t=>t.condition==='young').length;
+                    document.getElementById('stat-care').textContent = treeData.filter(t=>t.condition==='needs-care').length;
+                }
+                renderTrees('all');
+                document.querySelectorAll('.tree-map-filters button').forEach(btn=>{
+                    btn.addEventListener('click',()=>{
+                        document.querySelectorAll('.tree-map-filters button').forEach(b=>b.classList.remove('active'));
+                        btn.classList.add('active');
+                        renderTrees(btn.dataset.filter);
+                    });
+                });
+            }
+        })();
+    </script>
+    <script src="{% static 'assets/js/main.js' %}"></script>
+</body>
+</html>

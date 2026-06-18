@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Контакты | ЭКО-ШКОЛА №59</title>
+    <link rel="stylesheet" href="{% static 'assets/css/main.css' %}">
+</head>
+<body>
+    <div id="page-loader"><div class="loader-leaf"></div></div>
+    <div class="toast-container" id="toast-container"></div>
+    <button id="back-to-top">↑</button>
+
+    <nav class="navbar" id="navbar">
+        <a href="{% url 'home' %}" class="nav-logo"><span class="logo-icon">🌿</span><span>ЭКО-ШКОЛА №59</span></a>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="{% url 'about' %}">О проекте</a></li>
+            <li><a href="{% url 'eco_patrol' %}">Эко-Патруль</a></li>
+            <li><a href="{% url 'tree_map' %}">Карта деревьев</a></li>
+            <li><a href="{% url 'monitoring' %}">Мониторинг</a></li>
+            <li><a href="{% url 'news' %}">Новости</a></li>
+            <li><a href="{% url 'gallery' %}">Галерея</a></li>
+            <li><a href="{% url 'participants' %}">Участники</a></li>
+            <li><a href="{% url 'documents' %}">Документы</a></li>
+            <li><a href="{% url 'achievements' %}">Достижения</a></li>
+            <li><a href="{% url 'contacts' %}" class="active">Контакты</a></li>
+        </ul>
+        <div class="nav-actions">
+            <button class="theme-toggle" id="theme-toggle">🌓</button>
+            <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <main class="section" style="padding-top:calc(var(--navbar-height) + 2rem);">
+        <div class="section-header reveal">
+            <span class="section-tag">Контакты</span>
+            <h2>Свяжитесь с нами</h2>
+            <div class="section-line"></div>
+        </div>
+        <div class="contacts-grid reveal">
+            <div>
+                <div class="contact-info-item"><span class="ci-icon">📍</span><div><strong>Адрес:</strong><br>г. Ош, ул. Школьная, 59<br>Школа №59 имени Оморбека Датка</div></div>
+                <div class="contact-info-item"><span class="ci-icon">📞</span><div><strong>Телефон:</strong><br>+996 (3222) 5-59-59</div></div>
+                <div class="contact-info-item"><span class="ci-icon">📧</span><div><strong>Email:</strong><br>eco-school59@osh.edu.kg</div></div>
+                <div class="contact-info-item"><span class="ci-icon">🌐</span><div><strong>Социальные сети:</strong><br>@eco_school59_osh</div></div>
+                <div class="map-placeholder">🗺️<br><small>Карта г. Ош</small></div>
+            </div>
+            
+            <!-- ИЗМЕНЕНИЕ: Добавлен method="post", action="" и {% csrf_token %} -->
+            <form class="contact-form" method="post" action="">
+                {% csrf_token %}
+                
+                <!-- ИЗМЕНЕНИЕ: Добавлен атрибут name="..." -->
+                <input type="text" name="name" placeholder="Ваше имя" required>
+                
+                <input type="email" name="email" placeholder="Email" required>
+                
+                <textarea name="message" rows="4" placeholder="Ваше сообщение..." required></textarea>
+                
+                <button type="submit" class="btn btn-primary">📤 Отправить сообщение</button>
+            </form>
+        </div>
+    </main>
+
+    <footer class="site-footer"> ... </footer>
+    
+    <script>
+        (function() {
+            // ... ваш общий JS ...
+            
+            // ИЗМЕНЕНИЕ: убрали window.handleContactSubmit, чтобы он не блокировал отправку
+            // Форма сама уйдет на сервер, а сервер перенаправит в WhatsApp
+            
+        })();
+    </script>
+    <script src="{% static 'assets/js/main.js' %}"></script>
+</body>
+</html>
